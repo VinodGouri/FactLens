@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% from 'macros.html' import verdict %}{% block title %}Check #{{ r.id }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('history') }}" class="small">&larr; Back to history</a>
+<div class="card mt-2 result-card result-{{ r.prediction|lower }}"><div class="card-body">
+  <p class="small text-muted mb-1">#{{ r.id }} · {{ r.created_at }} UTC · model {{ r.model_name }}</p>
+  <p class="lead">{{ r.statement }}</p>
+  <p>{{ verdict(r.prediction, r.confidence) }} &nbsp; P(fake) = {{ '%.3f'|format(r.p_fake) }}</p>
+  <h6>Retrieved evidence</h6>
+  {% if evidence %}<ul class="list-group">{% for e in evidence %}<li class="list-group-item small d-flex justify-content-between gap-2"><span>{{ e.text }}</span><span class="text-nowrap">{{ verdict(e.verdict) }} <span class="text-muted">sim {{ e.similarity }}</span></span></li>{% endfor %}</ul>{% else %}<p class="small text-muted">None.</p>{% endif %}
+</div></div>
+{% endblock %}

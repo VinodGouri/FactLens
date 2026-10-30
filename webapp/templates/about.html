@@ -1,0 +1,32 @@
+{% extends 'base.html' %}{% block title %}About{% endblock %}
+{% block content %}
+<h2 class="mb-3">About the project</h2>
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card h-100"><div class="card-body">
+      <h5>Base paper</h5>
+      <p>Anusha, K. M. Shenoy, S. N. Pai, “RAG-Enhanced DistilBERT Model for Contextual Understanding of Polysemy in Digital News Titles,” <em>IEEE Access</em>, vol. 14, pp. 90425–90443, 2026. doi: 10.1109/ACCESS.2026.3702098</p>
+      <h5>Dataset</h5>
+      <p>10,240 short political statements (LIAR / PolitiFact training split), binarised into <b>Real</b> (true, mostly-true, half-true) and <b>Fake</b> (false, barely-true, pants-on-fire). Stratified 70/15/15 split.</p>
+      <h5>Proposed system</h5>
+      <ul class="mb-0">
+        <li>RAG retriever: TF-IDF search over training-split fact-checked claims (with verdicts).</li>
+        <li>Polysemy module: WordNet glosses of polysemous words, disambiguated with Lesk using the retrieved evidence.</li>
+        <li>Models: TF-IDF + LR, RoBERTa-base, RAG-RoBERTa-base, RAG-DistilRoBERTa-KD (paper's RAG-DistilBERT recipe), RAG-XLM-R-base, and a weighted soft-voting ensemble.</li>
+      </ul>
+    </div></div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100"><div class="card-body">
+      <h5>Test-set results (real evaluation output)</h5>
+      {% if table %}
+      <div class="table-responsive"><table class="table table-sm align-middle">
+        <thead><tr><th>Model</th><th>Acc</th><th>F1</th><th>Macro-F1</th><th>AUC</th></tr></thead>
+        <tbody>{% for r in table %}<tr class="{{ 'table-success' if info and r.model==info.best_model }}"><td>{{ r.model }}</td><td>{{ r.accuracy }}</td><td>{{ r.f1 }}</td><td>{{ r.macro_f1 }}</td><td>{{ r.roc_auc }}</td></tr>{% endfor %}</tbody>
+      </table></div>
+      <p class="small text-muted mb-0">Highlighted row = deployed best model (chosen on validation macro-F1).</p>
+      {% else %}<p class="text-muted">Results appear after the training notebook has been run.</p>{% endif %}
+    </div></div>
+  </div>
+</div>
+{% endblock %}

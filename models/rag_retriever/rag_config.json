@@ -1,0 +1,13 @@
+{
+  "top_k": 3,
+  "min_similarity": 0.05,
+  "max_evidence_words": 15,
+  "max_statement_words": 60,
+  "max_polysemous_words": 2,
+  "min_senses": 4,
+  "max_gloss_words": 8,
+  "label_tags": {
+    "0": "real",
+    "1": "fake"
+  }
+}

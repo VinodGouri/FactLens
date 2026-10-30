@@ -1,0 +1,9 @@
+{% macro verdict(pred, conf=None) -%}
+<span class="badge verdict-{{ pred|lower }}">{% if pred=='Fake' %}<i class="bi bi-x-octagon"></i>{% else %}<i class="bi bi-check-circle"></i>{% endif %} {{ pred }}{% if conf is not none %} · {{ '%.1f'|format(conf*100) }}%{% endif %}</span>
+{%- endmacro %}
+{% macro status_badge(s) -%}
+<span class="badge {{ {'PENDING':'bg-warning text-dark','APPROVED':'bg-success','REJECTED':'bg-danger'}[s] }}">{{ s }}</span>
+{%- endmacro %}
+{% macro post_button(url, label, cls) -%}
+<form method="post" action="{{ url }}" class="d-inline"><input type="hidden" name="_csrf" value="{{ csrf_token() }}"><button class="btn btn-sm {{ cls }}">{{ label }}</button></form>
+{%- endmacro %}

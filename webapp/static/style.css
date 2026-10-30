@@ -1,0 +1,21 @@
+:root { --ink:#14213d; --accent:#e4572e; --accent-soft:#fde3da; }
+body { background:#f6f7fb; }
+.bg-ink { background:var(--ink)!important; }
+.text-accent { color:var(--accent)!important; }
+.btn-accent { background:var(--accent); border-color:var(--accent); color:#fff; }
+.btn-accent:hover { background:#c9461f; border-color:#c9461f; color:#fff; }
+.bg-accent-soft { background:var(--accent-soft); color:#9b2f10; }
+.hero { background:linear-gradient(135deg,#14213d 0%,#24376b 100%); color:#fff; }
+.hero .lead { color:#d7dcf0; }
+.card { border:0; box-shadow:0 1px 3px rgba(20,33,61,.08); }
+.feature i { display:inline-block; }
+.stat { background:#f6f7fb; border-radius:.5rem; padding:.5rem; }
+.stat-v { font-size:1.6rem; font-weight:700; line-height:1.2; }
+.stat-l { font-size:.75rem; color:#6c757d; text-transform:uppercase; letter-spacing:.03em; }
+.stat-card i { font-size:1.3rem; }
+.verdict-fake { background:#d9534f; }
+.verdict-real { background:#2e9e6a; }
+.result-card { border-left:6px solid #ccc; }
+.result-fake { border-left-color:#d9534f; }
+.result-real { border-left-color:#2e9e6a; }
+canvas { max-height:260px; }

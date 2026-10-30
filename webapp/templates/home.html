@@ -1,0 +1,34 @@
+{% extends 'base.html' %}{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero rounded-4 p-4 p-md-5 mb-4">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-7">
+      <span class="badge bg-accent-soft mb-3">IEEE Access 2026 · RAG-enhanced transformers</span>
+      <h1 class="display-5 fw-bold">Is that news statement <span class="text-accent">fake or real?</span></h1>
+      <p class="lead">FactLens classifies short news claims and headlines using transformer models augmented with retrieved, previously fact-checked claims and WordNet sense disambiguation for polysemous words.</p>
+      <div class="d-flex flex-wrap gap-2">
+        {% if me and me.role=='user' %}<a href="{{ url_for('predict_page') }}" class="btn btn-accent btn-lg">Check a statement</a>
+        {% else %}<a href="{{ url_for('register') }}" class="btn btn-accent btn-lg">Create an account</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">User Login</a>{% endif %}
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card shadow-sm border-0"><div class="card-body">
+        <h6 class="text-muted mb-3">Deployed model</h6>
+        {% if info %}
+          <p class="h5 mb-1">{{ info.best_model }}</p>
+          <p class="small text-muted">Selected by validation macro-F1 · held-out test results:</p>
+          <div class="row text-center g-2">
+            {% for k in ['accuracy','f1','roc_auc'] %}<div class="col-4"><div class="stat"><div class="stat-v">{{ '%.3f'|format(info.test_metrics[k]) }}</div><div class="stat-l">{{ k|replace('_',' ')|upper }}</div></div></div>{% endfor %}
+          </div>
+        {% else %}<p class="text-warning mb-0">No trained model found yet — run the training notebook first.</p>{% endif %}
+      </div></div>
+    </div>
+  </div>
+</section>
+<div class="row g-3">
+  {% for icon, t, d in [('search','Retrieval','Finds the 3 most similar fact-checked claims (with their verdicts) from the training split of PolitiFact statements.'),('book','Polysemy','Disambiguates the most ambiguous words of the claim with WordNet + Lesk using the retrieved evidence as context.'),('cpu','Transformer','Fine-tuned transformers (with and without retrieved evidence) output P(fake); the one with the best validation macro-F1 is deployed.'),('clock-history','History','Every check is stored with its evidence and timestamp in your personal history.')] %}
+  <div class="col-md-6 col-lg-3"><div class="card h-100 feature"><div class="card-body"><i class="bi bi-{{ icon }} fs-3 text-accent"></i><h5 class="mt-2">{{ t }}</h5><p class="small text-muted mb-0">{{ d }}</p></div></div></div>
+  {% endfor %}
+</div>
+{% endblock %}

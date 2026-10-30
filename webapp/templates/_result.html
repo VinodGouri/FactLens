@@ -1,0 +1,18 @@
+<div class="verdict {{ 'fake' if result.prediction == 'Fake' else 'real' }} mb-3">
+  <div class="d-flex justify-content-between align-items-center">
+    <div><div class="small text-uppercase opacity-75">Verdict</div>
+      <div class="h2 mb-0"><i class="bi {{ 'bi-x-octagon' if result.prediction == 'Fake' else 'bi-check-circle' }}"></i> {{ result.prediction|upper }} NEWS</div></div>
+    <div class="text-end"><div class="small opacity-75">Confidence</div><div class="h3 mb-0">{{ '%.1f' % (result.confidence*100) }}%</div></div>
+  </div>
+  <div class="progress mt-3" style="height:8px;background:rgba(255,255,255,.3)"><div class="progress-bar bg-light" style="width: {{ result.p_fake*100 }}%"></div></div>
+  <div class="small mt-1 opacity-75">P(Fake) = {{ '%.4f' % result.p_fake }} · model: {{ result.model }}</div>
+</div>
+<h6>Retrieved fact-checked claims used as evidence</h6>
+{% if evidence %}
+<ul class="list-group mb-2">{% for e in evidence %}
+  <li class="list-group-item d-flex justify-content-between align-items-start">
+    <span class="me-3">{{ e.text }}</span>
+    <span class="text-nowrap"><span class="badge {{ 'badge-fake' if e.verdict == 'Fake' else 'badge-real' }}">{{ e.verdict }}</span>
+    <span class="small text-muted ms-1">sim {{ e.similarity }}</span></span></li>{% endfor %}
+</ul>
+{% else %}<p class="text-muted small">No sufficiently similar claims in the knowledge base.</p>{% endif %}

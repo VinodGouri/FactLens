@@ -1,0 +1,26 @@
+{
+  "best_model": "roberta_base",
+  "type": "transformer",
+  "selection_metric": "validation macro_f1",
+  "validation_metrics": {
+    "accuracy": 0.6177,
+    "precision": 0.5524,
+    "recall": 0.6677,
+    "f1": 0.6046,
+    "macro_f1": 0.6173,
+    "roc_auc": 0.6553
+  },
+  "test_metrics": {
+    "accuracy": 0.6314,
+    "precision": 0.5661,
+    "recall": 0.6815,
+    "f1": 0.6185,
+    "macro_f1": 0.631,
+    "roc_auc": 0.6681
+  },
+  "label_map": {
+    "0": "Real",
+    "1": "Fake"
+  },
+  "threshold": 0.5
+}

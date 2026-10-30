@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% from 'macros.html' import status_badge %}{% block title %}Profile{% endblock %}
+{% block content %}
+<h2>Profile</h2>
+<div class="row g-4">
+  <div class="col-lg-4"><div class="card"><div class="card-body">
+    <p class="mb-1"><b>{{ me.name }}</b></p><p class="mb-1 text-muted">{{ me.email }}</p>
+    <p class="mb-1">Status: {{ status_badge(me.status) }}</p>
+    <p class="small text-muted mb-1">Member since {{ me.created_at }} UTC</p>
+    <p class="small text-muted mb-0">Total checks: {{ stats.total }}</p>
+  </div></div></div>
+  <div class="col-lg-4"><form method="post" class="card"><div class="card-body">
+    <h6>Update name</h6><input type="hidden" name="_csrf" value="{{ csrf_token() }}"><input type="hidden" name="action" value="name">
+    <input name="name" class="form-control mb-2" value="{{ me.name }}" maxlength="80" required><button class="btn btn-sm btn-accent">Save</button>
+  </div></form></div>
+  <div class="col-lg-4"><form method="post" class="card"><div class="card-body">
+    <h6>Change password</h6><input type="hidden" name="_csrf" value="{{ csrf_token() }}"><input type="hidden" name="action" value="password">
+    <input name="current" type="password" class="form-control mb-2" placeholder="Current password" required>
+    <input name="new" type="password" class="form-control mb-2" placeholder="New password" required>
+    <input name="confirm" type="password" class="form-control mb-2" placeholder="Confirm new password" required>
+    <button class="btn btn-sm btn-accent">Change password</button>
+  </div></form></div>
+</div>
+{% endblock %}

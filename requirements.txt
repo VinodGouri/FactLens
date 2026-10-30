@@ -1,0 +1,17 @@
+numpy>=2.0
+pandas>=2.2
+scikit-learn>=1.5
+matplotlib>=3.8
+seaborn>=0.13
+joblib>=1.4
+nltk>=3.9
+torch>=2.4
+transformers>=5.0
+tokenizers>=0.21
+safetensors>=0.4
+sentencepiece>=0.2
+jupyter>=1.0
+ipykernel>=6.29
+flask>=3.0
+werkzeug>=3.0
+flask>=3.0

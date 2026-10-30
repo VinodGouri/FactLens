@@ -1,0 +1,31 @@
+{% extends 'base.html' %}{% from 'macros.html' import verdict %}{% block title %}Check News{% endblock %}
+{% block content %}
+<h2>Check a news statement</h2>
+<p class="text-muted">The statement is cleaned, related fact-checked claims are retrieved, polysemous words are disambiguated, and the deployed model estimates the probability that the claim is fake.</p>
+<div class="row g-4">
+  <div class="col-lg-6">
+    <form method="post" class="card"><div class="card-body">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <textarea name="statement" class="form-control mb-2" rows="5" maxlength="1000" required placeholder="e.g. Says the governor cut education funding by 20 percent.">{{ text }}</textarea>
+      <div class="d-flex flex-wrap gap-2 mb-2">
+        {% for s in ["Says a new vaccine contains microchips that track people's location.", "The unemployment rate dropped to its lowest level in a decade last year.", "Our state spends more on prisons than on higher education."] %}
+        <button type="button" class="btn btn-sm btn-outline-secondary sample" data-text="{{ s }}">Sample {{ loop.index }}</button>{% endfor %}
+      </div>
+      <button class="btn btn-accent">Analyse</button>
+    </div></form>
+  </div>
+  <div class="col-lg-6">
+    {% if result %}
+    <div class="card result-card result-{{ result.prediction|lower }}"><div class="card-body">
+      <div class="d-flex justify-content-between align-items-center"><h4 class="mb-0">{{ verdict(result.prediction) }}</h4><span class="small text-muted">model: {{ result.model }}</span></div>
+      <p class="mt-3 mb-1">Confidence: <b>{{ '%.1f'|format(result.confidence*100) }}%</b> · P(fake) = {{ '%.3f'|format(result.p_fake) }}</p>
+      <div class="progress mb-3" style="height:10px"><div class="progress-bar bg-danger" style="width: {{ result.p_fake*100 }}%"></div><div class="progress-bar bg-success" style="width: {{ (1-result.p_fake)*100 }}%"></div></div>
+      <h6>Retrieved fact-checked evidence {% if not result.uses_rag %}<span class="badge bg-secondary-subtle text-secondary-emphasis fw-normal">reference only — the deployed model reads the statement alone</span>{% endif %}</h6>
+      {% if result.evidence %}<ul class="list-group mb-3">{% for e in result.evidence %}<li class="list-group-item small d-flex justify-content-between gap-2"><span>{{ e.text }}</span><span class="text-nowrap">{{ verdict(e.verdict) }} <span class="text-muted">sim {{ e.similarity }}</span></span></li>{% endfor %}</ul>{% else %}<p class="small text-muted">No sufficiently similar claims found.</p>{% endif %}
+      <h6>{{ 'Model context (RAG input)' if result.uses_rag else 'Retrieval + word-sense context (not used by this model)' }}</h6><p class="small font-monospace bg-light p-2 rounded mb-0">{{ result.rag_context }}</p>
+    </div></div>
+    {% else %}<div class="card"><div class="card-body text-muted">The result will appear here.</div></div>{% endif %}
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script>document.querySelectorAll('.sample').forEach(b=>b.onclick=()=>document.querySelector('textarea[name=statement]').value=b.dataset.text);</script>{% endblock %}

@@ -1,0 +1,14 @@
+{
+  "model": "ensemble_soft_voting",
+  "type": "ensemble",
+  "weights": {
+    "rag_roberta_base": 0.1,
+    "rag_xlmr_base": 0.5,
+    "tfidf_logreg": 0.4
+  },
+  "threshold": 0.5,
+  "label_map": {
+    "0": "Real",
+    "1": "Fake"
+  }
+}

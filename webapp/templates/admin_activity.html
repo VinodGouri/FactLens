@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}User Activity{% endblock %}
+{% block content %}
+<h2>User activity log</h2>
+<div class="card"><div class="card-body"><div class="table-responsive"><table class="table table-sm small align-middle">
+  <thead><tr><th>Time (UTC)</th><th>User</th><th>Action</th><th>Details</th><th>IP</th></tr></thead>
+  <tbody>{% for a in rows %}<tr><td class="text-nowrap">{{ a.created_at }}</td><td>{{ a.name or '—' }} <span class="text-muted">{{ a.email or a.username or '' }}</span></td><td><code>{{ a.action }}</code></td><td>{{ a.details }}</td><td>{{ a.ip }}</td></tr>{% endfor %}</tbody>
+</table></div></div></div>
+{% endblock %}

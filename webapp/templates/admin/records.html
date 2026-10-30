@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}All Records{% endblock %}
+{% block content %}
+<div class="container my-4">
+  <h3>All prediction records {% if uid %}<small class="text-muted">(user #{{ uid }} · <a href="{{ url_for('admin_records') }}">show all</a>)</small>{% endif %}</h3>
+  <div class="card"><div class="card-body table-responsive">
+  {% if rows %}<table class="table table-sm align-middle mb-0">
+    <thead><tr><th>#</th><th>User</th><th>Statement</th><th>Verdict</th><th>P(Fake)</th><th>Time (UTC)</th></tr></thead>
+    <tbody>{% for r in rows %}<tr><td>{{ r.id }}</td><td class="small">{{ r.name }}<br><span class="text-muted">{{ r.email }}</span></td>
+      <td class="stmt">{{ r.statement }}</td>
+      <td><span class="badge {{ 'badge-fake' if r.prediction == 'Fake' else 'badge-real' }}">{{ r.prediction }}</span></td>
+      <td>{{ '%.3f' % r.p_fake }}</td><td class="small text-nowrap">{{ r.created_at }}</td></tr>{% endfor %}</tbody>
+  </table>{% else %}<p class="text-muted mb-0">No records.</p>{% endif %}
+  </div></div>
+</div>
+{% endblock %}

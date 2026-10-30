@@ -1,0 +1,19 @@
+{
+  "model": "rag_roberta_base",
+  "framework": "pytorch/transformers",
+  "uses_rag": true,
+  "max_len": 96,
+  "best_epoch": 2,
+  "train_cfg": {
+    "epochs": 2,
+    "lr": 3e-05,
+    "batch_size": 16,
+    "max_len": 96,
+    "rag": true,
+    "freeze_layers": 4
+  },
+  "label_map": {
+    "0": "Real",
+    "1": "Fake"
+  }
+}

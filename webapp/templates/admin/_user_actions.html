@@ -1,0 +1,5 @@
+<div class="d-flex gap-1">
+{% if u.status != 'approved' %}<form method="post" action="{{ url_for('admin_user_action', uid=u.id, action='approve') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="back" value="{{ request.full_path }}"><button class="btn btn-success btn-sm">Approve</button></form>{% endif %}
+{% if u.status != 'rejected' %}<form method="post" action="{{ url_for('admin_user_action', uid=u.id, action='reject') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="back" value="{{ request.full_path }}"><button class="btn btn-warning btn-sm">Reject</button></form>{% endif %}
+<form method="post" action="{{ url_for('admin_user_action', uid=u.id, action='delete') }}" onsubmit="return confirm('Delete this user and all their records?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="back" value="{{ request.full_path }}"><button class="btn btn-outline-danger btn-sm">Delete</button></form>
+</div>

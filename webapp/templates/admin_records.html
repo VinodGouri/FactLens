@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% from 'macros.html' import verdict %}{% block title %}All Records{% endblock %}
+{% block content %}
+<h2>All prediction records</h2>
+<div class="card"><div class="card-body"><div class="table-responsive"><table class="table table-sm table-hover align-middle">
+  <thead><tr><th>#</th><th>Time (UTC)</th><th>User</th><th>Statement</th><th>Result</th><th>P(fake)</th><th>Model</th></tr></thead>
+  <tbody>{% for r in rows %}<tr><td>{{ r.id }}</td><td class="small text-nowrap">{{ r.created_at }}</td><td class="small">{{ r.name }}<br><span class="text-muted">{{ r.email }}</span></td><td>{{ r.statement|truncate(100) }}</td><td>{{ verdict(r.prediction, r.confidence) }}</td><td>{{ '%.3f'|format(r.p_fake) }}</td><td class="small">{{ r.model_name }}</td></tr>
+  {% else %}<tr><td colspan="7" class="text-muted">No records yet.</td></tr>{% endfor %}</tbody>
+</table></div></div></div>
+{% endblock %}

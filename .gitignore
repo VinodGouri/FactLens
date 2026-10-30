@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Flask instance folder (contains database and secret key)
+webapp/instance/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+.notebook/
+
+# Large model weight files (too large for GitHub, regenerate by running the training notebook)
+*.pth
+*.safetensors
+models/pretrained_backbones/
+
+# Temporary / helper files
+find_large.ps1

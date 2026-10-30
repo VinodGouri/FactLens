@@ -1,0 +1,49 @@
+{% extends 'base.html' %}{% from 'macros.html' import verdict %}{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Welcome, {{ me.name }}</h2>
+  <a href="{{ url_for('predict_page') }}" class="btn btn-accent"><i class="bi bi-search"></i> Check a statement</a>
+</div>
+<div class="row g-3 mb-3">
+  {% for label, val, icon in [('Total checks', stats.total, 'list-check'), ('Predicted fake', stats.fake, 'x-octagon'), ('Predicted real', stats.real, 'check-circle'), ('Avg. confidence', ('%.1f%%'|format(stats.avg_confidence*100)) if stats.avg_confidence is not none else '—', 'speedometer2')] %}
+  <div class="col-6 col-lg-3"><div class="card stat-card"><div class="card-body"><i class="bi bi-{{ icon }} text-accent"></i><div class="stat-v">{{ val }}</div><div class="stat-l">{{ label }}</div></div></div></div>
+  {% endfor %}
+</div>
+<div class="row g-3 mb-3">
+  <div class="col-lg-6"><div class="card h-100"><div class="card-body">
+    <h6>Quick check</h6>
+    <form id="quick-form">
+      <textarea id="quick-text" class="form-control mb-2" rows="3" maxlength="1000" placeholder="Paste a news statement or headline..."></textarea>
+      <button class="btn btn-accent btn-sm" id="quick-btn">Analyse</button>
+    </form>
+    <div id="quick-result" class="mt-3"></div>
+  </div></div></div>
+  <div class="col-lg-3 col-md-6"><div class="card h-100"><div class="card-body"><h6>Your verdicts</h6>{% if stats.total %}<canvas id="pie"></canvas>{% else %}<p class="text-muted small">No checks yet.</p>{% endif %}</div></div></div>
+  <div class="col-lg-3 col-md-6"><div class="card h-100"><div class="card-body"><h6>Checks per day</h6>{% if stats.daily %}<canvas id="daily"></canvas>{% else %}<p class="text-muted small">No activity yet.</p>{% endif %}</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-7"><div class="card h-100"><div class="card-body">
+    <div class="d-flex justify-content-between"><h6>Recent checks</h6><a href="{{ url_for('history') }}" class="small">Full history</a></div>
+    {% if recent %}<ul class="list-group list-group-flush">{% for r in recent %}
+      <li class="list-group-item d-flex justify-content-between gap-2"><a class="text-truncate" href="{{ url_for('history_detail', pid=r.id) }}">{{ r.statement }}</a>{{ verdict(r.prediction, r.confidence) }}</li>{% endfor %}</ul>
+    {% else %}<p class="text-muted small">Your checks will appear here.</p>{% endif %}
+  </div></div></div>
+  <div class="col-lg-5"><div class="card h-100"><div class="card-body"><h6>Model test performance</h6>{% if table %}<canvas id="models"></canvas><p class="small text-muted mt-2 mb-0">Deployed: <b>{{ info.best_model }}</b></p>{% else %}<p class="text-muted small">Not available.</p>{% endif %}</div></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+const stats = {{ stats|tojson }}; const table = {{ table|tojson }};
+if (document.getElementById('pie')) new Chart(document.getElementById('pie'), {type:'doughnut', data:{labels:['Fake','Real'], datasets:[{data:[stats.fake, stats.real], backgroundColor:['#d9534f','#2e9e6a']}]}});
+if (document.getElementById('daily')) new Chart(document.getElementById('daily'), {type:'bar', data:{labels:stats.daily.map(d=>d.d.slice(5)), datasets:[{label:'Fake', data:stats.daily.map(d=>d.fake), backgroundColor:'#d9534f'},{label:'Real', data:stats.daily.map(d=>d.real), backgroundColor:'#2e9e6a'}]}, options:{scales:{x:{stacked:true}, y:{stacked:true, ticks:{precision:0}}}}});
+if (document.getElementById('models')) new Chart(document.getElementById('models'), {type:'bar', data:{labels:table.map(r=>r.model), datasets:[{label:'Accuracy', data:table.map(r=>r.accuracy), backgroundColor:'#3b6fb6'},{label:'Macro-F1', data:table.map(r=>r.macro_f1), backgroundColor:'#f0a43a'}]}, options:{indexAxis:'y', scales:{x:{min:0.4, max:0.8}}}});
+document.getElementById('quick-form').addEventListener('submit', async e => {
+  e.preventDefault(); const out = document.getElementById('quick-result'); const btn = document.getElementById('quick-btn');
+  btn.disabled = true; out.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Analysing...';
+  try { const r = await predictApi(document.getElementById('quick-text').value); out.innerHTML = renderResult(r); }
+  catch (err) { out.innerHTML = `<div class="alert alert-danger py-2">${escapeHtml(err.message)}</div>`; }
+  btn.disabled = false;
+});
+</script>
+{% endblock %}

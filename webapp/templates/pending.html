@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block title %}Pending approval{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-7">
+<div class="card border-warning shadow-sm"><div class="card-body p-4 text-center">
+  <i class="bi bi-hourglass-split display-4 text-warning"></i>
+  <h3 class="mt-2">Account pending approval</h3>
+  <p class="mb-1">Hi {{ name }}, your account status is <span class="badge bg-warning text-dark">PENDING</span>.</p>
+  <p class="text-muted">An administrator must approve your registration before you can access the dashboard. Please try logging in again later.</p>
+  <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">Back to home</a>
+</div></div></div></div>
+{% endblock %}

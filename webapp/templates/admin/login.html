@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Admin Login{% endblock %}
+{% block content %}
+<div class="container"><div class="card auth-card"><div class="card-body p-4">
+  <h4 class="mb-3"><i class="bi bi-shield-lock"></i> Admin login</h4>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-3"><label class="form-label">Username</label><input class="form-control" name="username" value="{{ username or '' }}" required></div>
+    <div class="mb-3"><label class="form-label">Password</label><input class="form-control" type="password" name="password" required></div>
+    <button class="btn btn-dark w-100">Login as admin</button>
+  </form>
+</div></div></div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="container my-4">
+  <h3>Admin dashboard</h3>
+  <div class="row g-3">
+    <div class="col-6 col-lg-3"><div class="card kpi"><div class="card-body"><div class="label">Pending users</div><div class="value text-warning">{{ counts.pending }}</div></div></div></div>
+    <div class="col-6 col-lg-3"><div class="card kpi"><div class="card-body"><div class="label">Approved users</div><div class="value">{{ counts.approved }}</div></div></div></div>
+    <div class="col-6 col-lg-3"><div class="card kpi"><div class="card-body"><div class="label">Total predictions</div><div class="value">{{ n_pred }}</div></div></div></div>
+    <div class="col-6 col-lg-3"><div class="card kpi"><div class="card-body"><div class="label">Flagged fake</div><div class="value text-danger">{{ n_fake }}</div></div></div></div>
+  </div>
+  <div class="row g-3 mt-1">
+    <div class="col-lg-4"><div class="card h-100"><div class="card-body"><h6>Users by status</h6><div style="height:230px"><canvas id="ustat"></canvas></div></div></div></div>
+    <div class="col-lg-4"><div class="card h-100"><div class="card-body"><h6>Predictions per day</h6><div style="height:230px"><canvas id="pday"></canvas></div></div></div></div>
+    <div class="col-lg-4"><div class="card h-100"><div class="card-body"><h6>Most active users</h6>
+      {% if top_users %}<ul class="list-group list-group-flush">{% for t in top_users %}<li class="list-group-item d-flex justify-content-between"><span>{{ t.name }}</span><span class="badge bg-secondary">{{ t.n }}</span></li>{% endfor %}</ul>
+      {% else %}<p class="text-muted small">No predictions yet.</p>{% endif %}</div></div></div>
+  </div>
+  <div class="card mt-3"><div class="card-body">
+    <h6>Pending approvals</h6>
+    {% if pending %}<table class="table table-sm align-middle mb-0"><thead><tr><th>Name</th><th>Email</th><th>Registered</th><th></th></tr></thead><tbody>
+      {% for u in pending %}<tr><td>{{ u.name }}</td><td>{{ u.email }}</td><td class="small">{{ u.created_at }}</td><td>{% include "admin/_user_actions.html" %}</td></tr>{% endfor %}
+    </tbody></table>{% else %}<p class="text-muted mb-0">No pending registrations.</p>{% endif %}
+  </div></div>
+  <div class="card mt-3"><div class="card-body">
+    <div class="d-flex justify-content-between"><h6>Latest activity</h6><a class="small" href="{{ url_for('admin_activity') }}">View all</a></div>
+    <table class="table table-sm mb-0"><tbody>{% for a in activity %}<tr><td class="small text-nowrap">{{ a.created_at }}</td><td>{{ a.name or 'deleted user' }}</td><td><code>{{ a.action }}</code></td><td class="small">{{ a.details }}</td></tr>{% endfor %}</tbody></table>
+  </div></div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+const C = {{ counts|tojson }}, D = {{ daily|tojson }};
+new Chart(ustat, {type: 'doughnut', data: {labels: ['Pending', 'Approved', 'Rejected'], datasets: [{data: [C.pending, C.approved, C.rejected], backgroundColor: ['#e9a23b', '#2a9d8f', '#9ca3af']}]}, options: {maintainAspectRatio: false, plugins: {legend: {position: 'bottom'}}}});
+new Chart(pday, {type: 'bar', data: {labels: D.labels, datasets: [{label: 'Predictions', data: D.n, backgroundColor: '#1f3b73'}]}, options: {maintainAspectRatio: false, scales: {y: {beginAtZero: true, ticks: {precision: 0}}}, plugins: {legend: {display: false}}}});
+</script>{% endblock %}

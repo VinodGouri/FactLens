@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}User Activity{% endblock %}
+{% block content %}
+<div class="container my-4">
+  <h3>User activity log</h3>
+  <div class="card"><div class="card-body table-responsive">
+    <table class="table table-sm align-middle mb-0">
+      <thead><tr><th>Time (UTC)</th><th>User</th><th>Action</th><th>Details</th><th>IP</th></tr></thead>
+      <tbody>{% for a in rows %}<tr><td class="small text-nowrap">{{ a.created_at }}</td>
+        <td class="small">{{ a.name or 'deleted user' }}<br><span class="text-muted">{{ a.email or a.username or '' }}</span></td>
+        <td><code>{{ a.action }}</code></td><td class="small">{{ a.details }}</td><td class="small">{{ a.ip }}</td></tr>{% endfor %}</tbody>
+    </table>
+  </div></div>
+</div>
+{% endblock %}

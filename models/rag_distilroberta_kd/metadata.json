@@ -1,0 +1,29 @@
+{
+  "model": "rag_distilroberta_kd",
+  "framework": "pytorch/transformers",
+  "uses_rag": true,
+  "max_len": 96,
+  "best_epoch": 2,
+  "train_cfg": {
+    "epochs": 2,
+    "lr": 5e-05,
+    "batch_size": 16,
+    "max_len": 96,
+    "rag": true,
+    "freeze_layers": 0,
+    "kd_alpha": 0.5,
+    "kd_temperature": 2.0,
+    "student_layers": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10
+    ]
+  },
+  "label_map": {
+    "0": "Real",
+    "1": "Fake"
+  }
+}
